@@ -1,10 +1,19 @@
-language: bash
-services:
-- docker
-script: true
+---
 sudo: required
-before_install:
-- '[ "${TRAVIS_EVENT_TYPE}" = "cron" ] && bash scripts/install_cron.sh || bash scripts/install.sh'
-group: stable
-dist: precise
-os: linux
+
+services:
+  - docker
+
+cache:
+  directories:
+    - "$HOME/git"
+    - "$GOPATH/src"
+    - "$GOPATH/pkg"
+
+install:
+  - '[ "${TRAVIS_EVENT_TYPE}" = "cron" ] && scripts/install_cron.sh || scripts/install.sh'
+
+script:
+  - '[ "${TRAVIS_EVENT_TYPE}" = "cron" ] && \
+    bash scripts/build_cron.sh || \
+    bash scripts/build.sh'
